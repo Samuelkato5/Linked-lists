@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Linked lists: practice quiz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f2f5f7;--surface:#fff;--ink:#14202b;--mute:#566574;--line:#d3dce3;--accent:#0e6a8a;--accent-ink:#fff;--ok:#1d7a4b;--okbg:#e3f4ea;--bad:#b3342c;--badbg:#fbe8e6;--code:#e7edf1;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a22;--surface:#17252f;--ink:#e6eef3;--mute:#9db0be;--line:#2c4050;--accent:#5bbcd9;--accent-ink:#06222d;--ok:#5fd194;--okbg:#14382a;--bad:#ff8b80;--badbg:#3f1e1b;--code:#223644;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a22;--surface:#17252f;--ink:#e6eef3;--mute:#9db0be;--line:#2c4050;--accent:#5bbcd9;--accent-ink:#06222d;--ok:#5fd194;--okbg:#14382a;--bad:#ff8b80;--badbg:#3f1e1b;--code:#223644;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:680px;margin:0 auto;padding:28px 18px 48px}
+h1{font-size:clamp(1.7rem,6vw,2.3rem);line-height:1.15;margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 24px}
+.q{border:1px solid var(--line);background:var(--surface);border-radius:10px;margin:0 0 16px;padding:16px 16px 8px}
+.qt{display:flex;gap:10px;font-weight:500;margin:0 0 12px}
+.n{color:var(--accent);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;min-width:1.6em}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin:0 0 8px;cursor:pointer}
+.opt input{margin-top:.3em;accent-color:var(--accent)}
+.opt:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt.key{background:var(--okbg);border-color:var(--ok);box-shadow:none}
+.opt.miss{background:var(--badbg);border-color:var(--bad);box-shadow:none}
+code{font:500 .88em "IBM Plex Mono",ui-monospace,Menlo,monospace;background:var(--code);padding:.08em .35em;border-radius:4px}
+.why{margin:10px 0 10px;padding-left:12px;border-left:3px solid var(--line);color:var(--mute);font-size:.95rem}
+.right .why{border-color:var(--ok)}.wrong .why{border-color:var(--bad)}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+.bar span{color:var(--mute)}
+button{font:inherit;font-weight:600;padding:12px 20px;border:0;border-radius:8px;background:var(--accent);color:var(--accent-ink);cursor:pointer;min-height:44px}
+button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#res{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:18px 18px 16px;margin:0 0 22px}
+.score{font-size:3rem;font-weight:600;line-height:1;margin:0 0 8px}
+.score span{font-size:1.4rem;color:var(--mute);font-weight:400}
+#res p{margin:0 0 12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Linked lists: practice quiz</h1>
+<p class="sub">Advanced Data Structures, Class 3. 15 questions, one point each. Pick one answer per question; your score appears when you finish.</p>
+<div id="res" role="status" hidden></div>
+<div id="quiz"></div>
+<div class="bar"><button id="go" disabled>Show my score</button><span id="stat" aria-live="polite"></span></div>
+</main>
+<script>
+const Q=[
+{q:"You hold only `head`. Which one needs a walk along the list?",o:["Add a new first photo","Remove the first photo","Read the photo at position 300","Read `head.item`"],a:2,e:"Position 300 takes 300 hops from `head`. The two front edits are just link writes."},
+{q:"Singly linked list. You hold node `P`. Inserting a photo right after `P` costs:",o:["Θ(1)","Θ(n)","Θ(n²)","It depends on the list length"],a:0,e:"You hold `P`, so it is two writes (`X.next = P.next`, then `P.next = X`) with no walk."},
+{q:"Which design makes removing the last photo Θ(1)?",o:["Singly linked","Singly linked + `tail`","Doubly linked + `tail`","Singly linked + sentinel"],a:2,e:"With `prev`, `tail.prev` is the node before the last, so there is no walk from `head`."},
+{q:"Which statement about a sentinel node is true?",o:["It makes adding at the end Θ(1)","It removes special cases (empty list, first position) for the price of one extra node","It stores the first photo","It makes reading position i Θ(1)"],a:1,e:"A sentinel changes no costs in the table. It only removes special cases."},
+{q:"In a doubly linked list, which rule must always hold?",o:["If `x.next` is `y`, then `y.prev` is `x`","If `x.next` is `y`, then `y.prev` is `y`","If `x.next` is `y`, then `x.prev` is `y`","If `x.next` is `y`, then `y.next` is `x`"],a:0,e:"Both links of every pair must agree, which is why each edit fixes twice as many links."},
+{q:"List is `head → E → F → G → H`. Lines run: `Y.next = F.next`, then `F.next = Y`. Where does `Y.next` point?",o:["E","F","G","Y"],a:2,e:"`F.next` is read first: F points at G right now, so Y points at G."},
+{q:"Same list as Q6. Lines run in the SWAPPED order: `F.next = Y`, then `Y.next = F.next`. What happens when you run `items(head)`?",o:["It prints E F Y G H","It prints E F Y","It stops with an error","It never ends"],a:3,e:"After `F.next = Y`, `F.next` is Y, so line 2 sets `Y.next = Y`. Y points at itself, and G and H are lost."},
+{q:"List is `head → E → F → G → H`. Lines run: `target = G.next`, then `G.next = target.next`. The list is now:",o:["E F G H","E F G","E F H","E G H"],a:1,e:"`target` is H. `H.next` is `None`, so G now ends the list."},
+{q:"List is `head → E → F → G → H`. Lines run: `head = Node('Z', head)`, then `head = Node('Y', head)`. What is `head.next.next.item`?",o:["E","Z","F","Y"],a:0,e:"The list is Y → Z → E → F → G → H. `head.next` is Z, and `head.next.next` is E."},
+{q:"600 photos, singly list with NO tail. Add a photo at the end, holding only `head`:",o:["0 hops, 1 write","300 hops, 2 writes","600 hops, 2 writes","599 hops, 1 write"],a:3,e:"The last node is n − 1 = 599 hops from `head`, then one write: `last.next = new`."},
+{q:"50 photos, singly list. Remove the last one (you hold `tail`). Hops from `head` to reach the node before it:",o:["0","49","48","50"],a:2,e:"The node before the last is n − 2 hops from `head`: 50 − 2 = 48. Holding `tail` does not help."},
+{q:"Front inserts into an array cost about n² in total. Going from n = 10 000 to n = 100 000 (10 times bigger), the time becomes about:",o:["10 times more","20 times more","100 times more","1 000 times more"],a:2,e:"(10n)² = 100n², so about 100 times more work."},
+{q:"2 000 photos. Insert a new photo right after a node you hold. Array vs linked list:",o:["Array: 1 write. List: 2 000 hops","Array: 2 writes. List: up to 1 999 hops","Both: 2 writes","Array: up to 1 999 moves. List: 2 writes"],a:3,e:"The array shifts everything after the slot (up to n − 1 moves). The list only writes two links."},
+{q:"Doubly linked list `A ⇄ B ⇄ C`. You hold only B. Which two lines delete B?",o:["`B.next = A` and `B.prev = C`","`B.prev.next = B.next` and `B.next.prev = B.prev`","`A.next = B` and `C.prev = B`","`head = B.next` only"],a:1,e:"A now skips to C, and C points back to A. No walk, so Θ(1)."},
+{q:"Singly list with a `tail`. Which two lines add `new` at the end, in order?",o:["`tail.next = new`, then `tail = new`","`tail = new`, then `tail.next = new`","`new.next = tail`, then `tail = new`","`head.next = new`, then `tail = new`"],a:0,e:"Link the old last node first, then move `tail`. Swapped, `new.next` would point at itself."}
+];
+const $=s=>document.querySelector(s);
+const fmt=t=>t.replace(/`([^`]+)`/g,"<code>$1</code>");
+const quiz=$("#quiz"),btn=$("#go"),stat=$("#stat"),res=$("#res");
+function render(){
+  quiz.innerHTML="";
+  Q.forEach((x,i)=>{
+    const d=document.createElement("div");
+    d.className="q";d.setAttribute("role","radiogroup");d.setAttribute("aria-labelledby","t"+i);
+    d.innerHTML='<p class="qt" id="t'+i+'"><span class="n">'+(i+1)+'</span><span>'+fmt(x.q)+'</span></p>'+
+      x.o.map((o,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"><span>'+fmt(o)+'</span></label>').join("")+
+      '<p class="why" hidden></p>';
+    quiz.appendChild(d);
+  });
+  res.hidden=true;btn.hidden=false;stat.hidden=false;update();
+}
+function update(){
+  const n=Q.filter((_,i)=>document.querySelector("input[name=q"+i+"]:checked")).length;
+  stat.textContent=n+" of "+Q.length+" answered";
+  btn.disabled=n<Q.length;
+}
+quiz.addEventListener("change",update);
+btn.onclick=()=>{
+  let s=0;
+  Q.forEach((x,i)=>{
+    const d=quiz.children[i],pick=+d.querySelector("input:checked").value,ok=pick===x.a;
+    if(ok)s++;
+    d.classList.add(ok?"right":"wrong");
+    d.querySelectorAll(".opt").forEach((l,j)=>{
+      if(j===x.a)l.classList.add("key");else if(j===pick)l.classList.add("miss");
+      l.firstElementChild.disabled=true;
+    });
+    const w=d.querySelector(".why");w.hidden=false;
+    w.innerHTML=(ok?"<b>Correct.</b> ":"<b>Not quite.</b> The answer is "+fmt(x.o[x.a])+". ")+fmt(x.e);
+  });
+  const msg=s>=13?"Strong. You are ready for the quiz.":s>=9?"Close. Read the explanations under the questions you missed, then try again.":"Go back over the two edits (insert after, delete after) and the cost table, then try again.";
+  res.innerHTML='<p class="score">'+s+'<span> / '+Q.length+'</span></p><p>'+Math.round(s/Q.length*100)+'%. '+msg+'</p><button id="again">Try again</button>';
+  res.hidden=false;btn.hidden=true;stat.hidden=true;
+  $("#again").onclick=()=>{render();window.scrollTo(0,0);};
+  res.scrollIntoView();
+};
+render();
+</script>
+</body>
+</html>
